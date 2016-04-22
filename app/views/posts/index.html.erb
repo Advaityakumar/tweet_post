@@ -1,0 +1,7 @@
+<%= render "shared/flash"%>
+<h1>Post your tweet!</h1>
+
+<%= form_tag( {controller: "posts", action: "post_tweet"}, {:method => :post}) do %>
+  <%= text_field_tag :message, "", required: true%>
+  <%= submit_tag "Post"%>
+<% end %>

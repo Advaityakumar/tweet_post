@@ -1,0 +1,28 @@
+<div class="alert_html">
+  <% if notice %>
+    <div class="alert alert-info alert_top_spacing">
+            &times;
+        </button>
+        <% if notice.class == Array %>
+          <ul><% notice.each do |message| %>
+            <%= content_tag :li, message %>
+            <% end %></ul>
+        <% else %>
+          <%= notice %>
+          <% notice = nil %>
+        <%end%>
+    </div>
+  <%end %>
+  <% if alert %>
+    <div class="alert alert-error alert_top_spacing">
+        <%= simple_format(alert) %>
+        <% alert = nil %>
+    </div>
+  <%end %>
+  <% if flash[:error] %>
+    <div class="alert flash_error alert_top_spacing">
+      <%= simple_format(flash[:error]) %>
+      <% flash[:error] = nil %>
+    </div>
+  <%end %>
+</div>
