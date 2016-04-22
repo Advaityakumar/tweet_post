@@ -1,7 +1,8 @@
+<%= link_to "Check your latest tweets", "https://twitter.com/", target: "_blank"%>
 <%= render "shared/flash"%>
 <h1>Post your tweet!</h1>
 
 <%= form_tag( {controller: "posts", action: "post_tweet"}, {:method => :post}) do %>
-  <%= text_field_tag :message, "", required: true%>
-  <%= submit_tag "Post"%>
+  <%= text_area_tag :message, "",cols: 35, rows: 4, required: true%>
+  <%= submit_tag "Post", style: "vertical-align: 5px;"%>
 <% end %>
