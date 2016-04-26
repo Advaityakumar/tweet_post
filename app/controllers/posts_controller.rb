@@ -7,15 +7,21 @@ class PostsController < ApplicationController
   
   def post_tweet
     # Fetch access token
-    access_token = prepare_access_token
+    consumer, access_token = prepare_access_token
+    req = consumer.create_signed_request(:post, "/1.1/statuses/update.json", access_token, {}, :status => params[:message])
+    auth_header = req.as_json['authorization'].first
     
-    # Post tweet to twitter with th access token on the belave of user
-  	response = access_token.request(:post, "https://api.twitter.com/1.1/statuses/update.json", :status => params[:message])
-    
-    if response.code == "200"
+    begin
+      # Post tweet to twitter with th access token on the belave of user
+      response = RestClient.post("https://api.twitter.com/1.1/statuses/update.json",  {status: params[:message]},
+                {:accept_encoding => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3", :accept => "*/*",
+                 :user_agent => "OAuth gem v0.5.1", :content_length => "0",
+                 :content_type => "application/x-www-form-urlencoded" ,
+                 :Authorization => auth_header})
       flash[:notice] = "Tweet posted successfully"
-    else
-      body = JSON.parse response.body
+    rescue Exception => e
+      # Catching errors
+    	body = JSON.parse e.http_body.as_json
       errors = []
       body['errors'].each do |error|
         errors << error['message']
@@ -32,7 +38,7 @@ class PostsController < ApplicationController
     token_hash = { :oauth_token => ENV['ACCESS_TOKEN'], :oauth_token_secret => ENV['ACCESS_SECRET_KEY'] }
     access_token = OAuth::AccessToken.from_hash(consumer, token_hash )
  
-    return access_token
+    return consumer, access_token
   end
 end
 
