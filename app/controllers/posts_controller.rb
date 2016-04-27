@@ -14,10 +14,7 @@ class PostsController < ApplicationController
     begin
       # Post tweet to twitter with th access token on the belave of user
       response = RestClient.post("https://api.twitter.com/1.1/statuses/update.json",  {status: params[:message]},
-                {:accept_encoding => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3", :accept => "*/*",
-                 :user_agent => "OAuth gem v0.5.1", :content_length => "0",
-                 :content_type => "application/x-www-form-urlencoded" ,
-                 :Authorization => auth_header})
+                {:Authorization => auth_header})
       flash[:notice] = "Tweet posted successfully"
     rescue Exception => e
       # Catching errors
